@@ -6,16 +6,16 @@ import java.util.concurrent.TimeUnit;
 
 public class Reservation {
 	private Integer roomNumber;
-	private Date checkin;
-	private Date checkout;
+	private Date checkIn;
+	private Date checkOut;
 
 	private static SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
 
 	public Reservation(Integer roomNumber, Date checkin, Date checkout) {
 		super();
 		this.roomNumber = roomNumber;
-		this.checkin = checkin;
-		this.checkout = checkout;
+		this.checkIn = checkin;
+		this.checkOut = checkout;
 	}
 
 	public Integer getRoomNumber() {
@@ -23,11 +23,11 @@ public class Reservation {
 	}
 
 	public Date getCheckin() {
-		return checkin;
+		return checkIn;
 	}
 
 	public Date getCheckout() {
-		return checkout;
+		return checkOut;
 	}
 
 	public long duration() {
@@ -35,9 +35,17 @@ public class Reservation {
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 
-	public void updateDates(Date checkin, Date checkout) {
-		this.checkin = checkin;
-		this.checkout = checkout;
+	public String updateDates(Date checkin, Date checkout) {
+		Date date = new Date();
+		if (checkin.before(date) || checkout.before(date)) { // data de entrada for antes e se a saida for antes
+			return "Erro reservation: Reservation dates for update must be future dates";
+		} 
+		else if (!checkout.after(checkin)) {
+			return "Erro reservation: Check-out date must be after check-in date";
+		}
+		this.checkIn = checkin;
+		this.checkOut = checkout;
+		return null;
 	}
 
 	@Override
